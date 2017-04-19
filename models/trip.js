@@ -47,7 +47,7 @@ const Trip = sequelize.define('Trip',
       // in `/models/index.js`
 			associate: function(models) {
 				Trip.hasMany(
-          models.Memories,
+          models.Memory,
 					{
 						as: 'memories',
 						// this is how we make memory.trip_id non-nullable

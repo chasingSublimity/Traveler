@@ -17,10 +17,10 @@ router.get('/', (req, res) => Trip.findAll(
 			// since we're setting `tableName` in our model definition for `Memory`,
 			// we need to use `as` here with the same table name, otherwise
 			// Sequelize won't find it.
-			as: 'memores'
+			as: 'memories'
 		}]
 	}).then(trips => res.json({
-		trips: trips.map(rest => rest.apiRepr())
+		trips: trips.map(trip => trip.apiRepr())
 	}))
 );
 

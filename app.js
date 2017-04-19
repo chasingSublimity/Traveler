@@ -16,7 +16,7 @@ const app = express();
 app.use(morgan('common'));
 app.use(bodyParser.json());
 
-app.use('/restaurants', tripsRouter);
+app.use('/trips', tripsRouter);
 
 app.use('*', function(req, res) {
 	res.status(404).json({message: 'Not Found'});
