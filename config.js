@@ -10,6 +10,7 @@ const DATABASE_URL = (
 const TEST_DATABASE_URL = (
   process.env.TEST_DATABASE_URL ||
   global.TEST_DATABASE_URL ||
+  // cloud db for travis
   'postgres://bkfljyqp:ugPKU-AcqIGo6_QJXbOA4SaOpZ0dLfS-@stampy.db.elephantsql.com:5432/bkfljyqp'
 );
 
