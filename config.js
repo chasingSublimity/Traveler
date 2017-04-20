@@ -21,4 +21,3 @@ module.exports = {
 	// see http://docs.sequelizejs.com/en/latest/api/sequelize/#new-sequelizedatabase-usernamenull-passwordnull-options
 	SEQUELIZE_OPTIONS: {logging: env === 'test' ? false : console.log}
 };
-

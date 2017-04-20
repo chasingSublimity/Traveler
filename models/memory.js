@@ -27,15 +27,12 @@ const Memory = sequelize.define('Memory',
 		},
 		dateCreated: {
 			type: Sequelize.DATE,
-			// in our JS code, we'll refer to this property
-			// as `inspectionDate`, but in the db, the column
-			// name will be `inspection_date`.
 			field: 'date_created',
 			allowNull: false
 		},
 	}, {
 		// we explicitly tell Sequelize that this model is linked
-		// to a table named 'grades' instead of having Sequelize
+		// to a table named 'memories' instead of having Sequelize
 		// automatically determine table names, which can be error
 		// prone
 		tableName: 'memories',
