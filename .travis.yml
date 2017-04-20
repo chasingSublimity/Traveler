@@ -1,2 +1,9 @@
 language: node_js
 node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: aw93ss5QteHoMo3BMnA5g8WqI9az6jVqxog4wdMsMKMQKQhQEZXmsHg5/C6Ovp8Q5cvIkWLKKTOBWdy72JvOaUrSZAa/D6cCdlZkMmws52Bkjl+071nek5gOOv1sMSBB5NN0KscSccp9PwDieuEV+HGjinDpqlNVrsK9b4OL4wONc24OxkISO7FyAd56qJpBl+kA8l4p+DN830rl71q8hhwDBklM7hpRcsrEu3dA3PofjJ+p9p9KKF0YKUg0oREbV/YvsvXAA+1IXaMVALwk3K/jHCnYnlPfauHIniYbhF4nR3Ew4m+Uq2eRsu0Nl97PdAGhkAG8imiBxshhSVku9t7nN1Xsnj9na7OQdHKP/DEF1M+0tCGyXnrlAt8YEy4C/twrgoChZJRvA+pA+1ZNbF3e+TInLAudE6wMQ3AlDKuaNmJy20WE1heHJ+NinjBtc5HxgNzcQmlLsgjoBcCzKl1scHMnLyXgj3Ie92UU4qH36+z7aZmOoPNf8Q8PDrrBfG7SpwO4bZCFY6EDP8U5q61FIB4zY0lwaRQ/EexByTcUpeCV3MtywFJxNgbE6nwdLECqsjxwKQByT9KFCCsXk1G4G/+5MjUYy3klF+zfuqeD86fD45hccPesXsXdySYCRdSWs0H/VV2kWg29JB12myIdm7tWVwPitDrKZsMF5T0=
+  app: still-coast-98142
+  on:
+    repo: chasingSublimity/Traveler-Backend
