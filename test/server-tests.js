@@ -125,7 +125,6 @@ describe('Trip API', function() {
               'id', 'origin', 'destination', 'beginDate', 'endDate');
           });
           resTrip = res.body.trips[0];
-          console.log(resTrip);
           return Trip.findById(resTrip.id, {include: [{model: Memory, as: 'memories'}]});
         })
         .then(function(trip) {
