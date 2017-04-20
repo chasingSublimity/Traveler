@@ -1,5 +1,5 @@
 {
-  "name": "traveler",
+  "name": "traveler-backend",
   "version": "0.1.0",
   "private": true,
 
@@ -9,13 +9,10 @@
     "morgan": "^1.7.0",
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^3.29.0",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "sequelize": "^3.29.0"
   },
 
   "devDependencies": {
-    "react-scripts": "0.9.5",
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
     "faker": "^3.1.0",
@@ -24,22 +21,19 @@
   },
 
   "scripts": {
-    "start": "react-scripts start",
-    "start server": "nodemon server.js",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "nodemon server.js",
+    "test": "mocha"
   },
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).",
-  "main": "index.js",
+
+  "description": "Backend for Traveler",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chasingSublimity/Traveler.git"
+    "url": "git+https://github.com/chasingSublimity/Traveler-Backend.git"
   },
   "author": "chasingSublimity",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/chasingSublimity/Traveler/issues"
+    "url": "https://github.com/chasingSublimity/Traveler-Backend/issues"
   },
-  "homepage": "https://github.com/chasingSublimity/Traveler#readme"
+  "homepage": "https://github.com/chasingSublimity/Traveler-Backend#readme"
 }
