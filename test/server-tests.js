@@ -133,53 +133,52 @@ describe('Trip API', function() {
           resTrip.destination.should.equal(trip.destination);
           // resTrip.beginDate.should.equal(trip.beginDate);
           // resTrip.endDate.should.equal(trip.endDate);
-			});
-		});
-	});
-});
+      });
+    });
+  });
 
-//   describe('POST endpoint', function() {
-//     // strategy: make a POST request with data,
-//     // then prove that the restaurant we get back has
-//     // right keys, and that `id` is there (which means
-//     // the data was inserted into db)
-//     it('should add a new restaurant', function() {
+  describe('POST endpoint', function() {
+    // strategy: make a POST request with data,
+    // then prove that the trip we get back has
+    // right keys, and that `id` is there (which means
+    // the data was inserted into db)
+    it('should add a new trip', function() {
 
-//       const newRestaurantData = {
-//         name: faker.company.companyName(),
-//         cuisine: generateCuisineType(),
-//         borough: generateBoroughName(),
-//         addressBuildingNumber: faker.address.streetAddress(),
-//         addressStreet: faker.address.streetName(),
-//         addressZipcode: faker.address.zipCode()
-//       };
-//       return chai.request(app).post('/restaurants').send(newRestaurantData)
-//         .then(function(res) {
-//           res.should.have.status(201);
-//           res.should.be.json;
-//           res.body.should.be.a('object');
-//           res.body.should.include.keys(
-//             'id', 'name', 'cuisine', 'borough', 'mostRecentGrade', 'address');
-//           res.body.name.should.equal(newRestaurantData.name);
-//           // cause db should have created id on insertion
-//           res.body.id.should.not.be.null;
-//           res.body.cuisine.should.equal(newRestaurantData.cuisine);
-//           res.body.borough.should.equal(newRestaurantData.borough);
+      const newTripData = { 
+        origin: generateOriginName(),
+        destination: generateDestinationName(),
+        beginDate: faker.date.recent(),
+        endDate: faker.date.future(),
+        createdAt: faker.date.recent(),
+        updatedAt: faker.date.recent()
+      };
+      return chai.request(app).post('/trips').send(newTripData)
+        .then(function(res) {
 
-//           should.not.exist(res.body.mostRecentGrade);
+          res.should.have.status(201);
+          res.should.be.json;
+          res.body.should.be.a('object');
+          res.body.should.include.keys(
+            'id', 'origin', 'destination', 'beginDate', 'endDate');
+          res.body.origin.should.equal(newTripData.origin);
+          // cause db should have created id on insertion
+          res.body.id.should.not.be.null;
+          // verify the response sent by db equals the trip data we made
+          res.body.destination.should.equal(newTripData.destination);
+          // res.body.beginDate.should.equal(newTripData.beginDate);
+          // res.body.endDate.should.equal(res.body.endDate);
 
-//           return Restaurant.findById(res.body.id);
-//         })
-//         .then(function(restaurant) {
-//           restaurant.name.should.equal(newRestaurantData.name);
-//           restaurant.cuisine.should.equal(newRestaurantData.cuisine);
-//           restaurant.borough.should.equal(newRestaurantData.borough);
-//           restaurant.addressBuildingNumber.should.equal(newRestaurantData.addressBuildingNumber);
-//           restaurant.addressStreet.should.equal(newRestaurantData.addressStreet);
-//           restaurant.addressZipcode.should.equal(newRestaurantData.addressZipcode);
-//         });
-//     });
-//   });
+          // check the trip created in db with seed data
+          return Trip.findById(res.body.id);
+        })
+        .then(function(trip) {
+          trip.origin.should.equal(newTripData.origin);
+          trip.destination.should.equal(newTripData.destination);
+          // trip.beginDate.should.equal(newTripData.beginDate);
+          // trip.endDate.should.equal(newTripData.endDate);
+        });
+    });
+  });
 
 //   describe('PUT endpoint', function() {
 
@@ -190,7 +189,7 @@ describe('Trip API', function() {
 //     //  4. Prove restaurant in db is correctly updated
 //     it('should update fields you send over', function() {
 //       const updateData = {
-//         name: 'fofofofofofofof',
+//         origin: 'fofofofofofofof',
 //         cuisine: 'futuristic fusion'
 //       };
 
@@ -272,3 +271,4 @@ describe('Trip API', function() {
 //     });
 //   });
 // });
+});
