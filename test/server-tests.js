@@ -2,6 +2,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
 const app = require('../app');
+const moment = require('moment');
 const {Trip, Memory} = require('../models');
 
 const should = chai.should();
@@ -30,15 +31,14 @@ function generateDestinationName() {
 
 // create a new restaurant with three grades
 function generateTripData() {
-	const date = faker.date.recent();
 	return Trip.create(
 		{
 			origin: generateOriginName(),
 			destination: generateDestinationName(),
 			beginDate: faker.date.recent(),
 			endDate: faker.date.future(),
-			createdAt: date,
-			updatedAt: date
+			createdAt: moment(),
+			updatedAt: moment()
 		}, {
 			include: [{
 				model: Memory,
@@ -53,12 +53,17 @@ describe('Trip API', function() {
   // to make tests quicker, only drop all rows from each
   // table in between tests, instead of recreating tables
   beforeEach(function() {
-	return Trip
-    // .truncate drops all rows in this table
-    .truncate({cascade: true})
-    // then seed db with new test data
-    .then(() => seedTripData());
+		return Trip
+			// .truncate drops all rows in this table
+			.truncate({cascade: true})
+			// then seed db with new test data
+		.then(() => seedTripData());
 	});
+
+	// afterEach(function() {
+	// 	return Trip
+	// 		.truncate({cascade: true});
+	// });
 
 
 	describe('GET endpoint', function() {
@@ -107,8 +112,8 @@ describe('Trip API', function() {
         });
     });
 
-    it('should return trips with right fields', function() {
-      // Strategy: Get back all trips, and ensure they have expected keys
+    it('should return a trip with right fields and info', function() {
+      // Strategy: Get back all trips, and ensure they have expected keys and info
 
       let resTrip;
       return chai.request(app)
@@ -131,8 +136,9 @@ describe('Trip API', function() {
           resTrip.id.should.equal(trip.id);
           resTrip.origin.should.equal(trip.origin);
           resTrip.destination.should.equal(trip.destination);
-          // resTrip.beginDate.should.equal(trip.beginDate);
-          // resTrip.endDate.should.equal(trip.endDate);
+          // moment.js consistently formats date inputs
+          moment(resTrip.beginDate).format('YYYY MM DD').should.equal(moment(trip.beginDate).format('YYYY MM DD'));
+          moment(resTrip.endDate).format('YYYY MM DD').should.equal(moment(trip.endDate).format('YYYY MM DD'));
       });
     });
   });
@@ -152,6 +158,7 @@ describe('Trip API', function() {
         createdAt: faker.date.recent(),
         updatedAt: faker.date.recent()
       };
+      // console.log('seed beginDate data is: ', newTripData.beginDate);
       return chai.request(app).post('/trips').send(newTripData)
         .then(function(res) {
 
@@ -165,6 +172,7 @@ describe('Trip API', function() {
           res.body.id.should.not.be.null;
           // verify the response sent by db equals the trip data we made
           res.body.destination.should.equal(newTripData.destination);
+          // console.log('response begin date is: ', res.body.beginDate);
           // res.body.beginDate.should.equal(newTripData.beginDate);
           // res.body.endDate.should.equal(res.body.endDate);
 

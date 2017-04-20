@@ -2,29 +2,26 @@
   "name": "traveler-backend",
   "version": "0.1.0",
   "main": "server.js",
-
   "dependencies": {
-    "express": "^4.15.2",
     "body-parser": "^1.15.2",
+    "express": "^4.15.2",
+    "moment": "^2.18.1",
     "morgan": "^1.7.0",
+    "nodemon": "^1.11.0",
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^3.29.0",
-    "nodemon": "^1.11.0"
+    "sequelize": "^3.29.0"
   },
-
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
     "faker": "^3.1.0",
     "mocha": "^3.2.0"
   },
-
   "scripts": {
     "start": "nodemon server.js",
     "test": "NODE_ENV=test mocha"
   },
-
   "description": "Backend for Traveler",
   "repository": {
     "type": "git",
