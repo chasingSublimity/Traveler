@@ -10,7 +10,7 @@ const DATABASE_URL = (
 const TEST_DATABASE_URL = (
   process.env.TEST_DATABASE_URL ||
   global.TEST_DATABASE_URL ||
-  'postgres://localhost/test-traveler-app'
+  'postgres://bkfljyqp:ugPKU-AcqIGo6_QJXbOA4SaOpZ0dLfS-@stampy.db.elephantsql.com:5432/bkfljyqp'
 );
 
 module.exports = {
