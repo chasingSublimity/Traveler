@@ -1,6 +1,7 @@
 {
   "name": "traveler-backend",
   "version": "0.1.0",
+  "main": "server.js",
 
   "dependencies": {
     "express": "^4.15.2",
@@ -21,7 +22,7 @@
 
   "scripts": {
     "start": "nodemon server.js",
-    "test": "mocha"
+    "test": "NODE_ENV=test mocha"
   },
 
   "description": "Backend for Traveler",
