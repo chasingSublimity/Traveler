@@ -19,5 +19,6 @@ module.exports = {
 	// otherwise DATABASE_URl, which defaults to dev
 	DATABASE_URL: env === 'test' ? TEST_DATABASE_URL : DATABASE_URL,
 	// see http://docs.sequelizejs.com/en/latest/api/sequelize/#new-sequelizedatabase-usernamenull-passwordnull-options
-	SEQUELIZE_OPTIONS: {logging: env === 'test' ? false : console.log}
+	// SEQUELIZE_OPTIONS: {logging: env === 'test' ? false : console.log}
+	SEQUELIZE_OPTIONS: {logging: false}
 };

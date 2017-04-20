@@ -1,7 +1,6 @@
 {
   "name": "traveler-backend",
   "version": "0.1.0",
-  "private": true,
 
   "dependencies": {
     "express": "^4.15.2",
