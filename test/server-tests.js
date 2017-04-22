@@ -1,11 +1,12 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
-const app = require('../app');
 const moment = require('moment');
+const app = require('../app');
 const {Trip, Memory} = require('../models');
 
 const should = chai.should();
+const now = moment();
 
 chai.use(chaiHttp);
 
@@ -29,7 +30,6 @@ function generateDestinationName() {
 	return destinations[Math.floor(Math.random() * destinations.length)];
 }
 
-// create a new restaurant with three grades
 function generateTripData() {
 	return Trip.create(
 		{
@@ -37,8 +37,8 @@ function generateTripData() {
 			destination: generateDestinationName(),
 			beginDate: faker.date.recent(),
 			endDate: faker.date.future(),
-			createdAt: moment(),
-			updatedAt: moment()
+			createdAt: now,
+			updatedAt: now
 		}, {
 			include: [{
 				model: Memory,
@@ -47,24 +47,28 @@ function generateTripData() {
 		});
 }
 
-
 describe('Trip API', function() {
 
   // to make tests quicker, only drop all rows from each
   // table in between tests, instead of recreating tables
   beforeEach(function() {
+		console.log('dropping rows...');
 		return Trip
 			// .truncate drops all rows in this table
 			.truncate({cascade: true})
 			// then seed db with new test data
-		.then(() => seedTripData());
+			.then(() => {
+				console.log('seeding rows...');
+				return seedTripData();
+			});
 	});
 
-	// afterEach(function() {
-	// 	return Trip
-	// 		.truncate({cascade: true});
-	// });
-
+  // drop tables after all tests
+  after(function() {
+		console.log('dropping rows...');
+		return Trip
+			.truncate({cascade:true});
+  });
 
 	describe('GET endpoint', function() {
 
@@ -113,9 +117,8 @@ describe('Trip API', function() {
     });
 
     it('should return a trip with right fields and info', function() {
-      // Strategy: Get back all trips, and ensure they have expected keys and info
+      // Strategy: Get back all trips, and ensure they have expected keys
 
-      let resTrip;
       return chai.request(app)
         .get('/trips')
         .then(function(res) {
@@ -128,17 +131,7 @@ describe('Trip API', function() {
             trip.should.be.a('object');
             trip.should.include.keys(
               'id', 'origin', 'destination', 'beginDate', 'endDate');
-          });
-          resTrip = res.body.trips[0];
-          return Trip.findById(resTrip.id, {include: [{model: Memory, as: 'memories'}]});
-        })
-        .then(function(trip) {
-          resTrip.id.should.equal(trip.id);
-          resTrip.origin.should.equal(trip.origin);
-          resTrip.destination.should.equal(trip.destination);
-          // moment.js consistently formats date inputs
-          moment(resTrip.beginDate).format('YYYY MM DD').should.equal(moment(trip.beginDate).format('YYYY MM DD'));
-          moment(resTrip.endDate).format('YYYY MM DD').should.equal(moment(trip.endDate).format('YYYY MM DD'));
+        });
       });
     });
   });
@@ -149,16 +142,16 @@ describe('Trip API', function() {
     // right keys, and that `id` is there (which means
     // the data was inserted into db)
     it('should add a new trip', function() {
-
       const newTripData = { 
         origin: generateOriginName(),
         destination: generateDestinationName(),
-        beginDate: faker.date.recent(),
-        endDate: faker.date.future(),
-        createdAt: faker.date.recent(),
-        updatedAt: faker.date.recent()
+				beginDate: moment.utc(faker.date.recent()).format(),
+				endDate: faker.date.future(),
+        createdAt: now,
+        updatedAt: now
       };
-      // console.log('seed beginDate data is: ', newTripData.beginDate);
+
+      console.log('seed beginDate data is: ', newTripData.beginDate);
       return chai.request(app).post('/trips').send(newTripData)
         .then(function(res) {
 
@@ -168,13 +161,16 @@ describe('Trip API', function() {
           res.body.should.include.keys(
             'id', 'origin', 'destination', 'beginDate', 'endDate');
           res.body.origin.should.equal(newTripData.origin);
-          // cause db should have created id on insertion
+          // db should have created id on insertion
           res.body.id.should.not.be.null;
           // verify the response sent by db equals the trip data we made
           res.body.destination.should.equal(newTripData.destination);
-          // console.log('response begin date is: ', res.body.beginDate);
+
+          // console.log('response data: ', res.body.beginDate);
+          // console.log('newTripData: ', newTripData.beginDate);
+
           // res.body.beginDate.should.equal(newTripData.beginDate);
-          // res.body.endDate.should.equal(res.body.endDate);
+          // moment(res.body.endDate).format('YYYY MM DD').should.equal(moment(newTripData.endDate).format('YYYY MM DD'));
 
           // check the trip created in db with seed data
           return Trip.findById(res.body.id);
