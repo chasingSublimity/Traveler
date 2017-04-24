@@ -95,17 +95,17 @@ router.put('/:id', (req, res) => {
   .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
-// // can delete a restaurant by id
-// router.delete('/:id', (req, res) => {
-//   return Restaurant
-//     .destroy({
-//       where: {
-//         id: req.params.id
-//       }
-//     })
-//     .then(restaurant => res.status(204).end())
-//     .catch(err => res.status(500).json({message: 'Internal server error'}));
-// });
+// can delete a restaurant by id
+router.delete('/:id', (req, res) => {
+  return Trip
+    .destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+    .then(trip => res.status(204).end())
+    .catch(err => res.status(500).json({message: 'Internal server error'}));
+});
 
 // // can retrieve all the grades, if any, for a restaurant
 // router.get('/:id/grades', (req, res) => {
