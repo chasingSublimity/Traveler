@@ -20,12 +20,12 @@ const Trip = sequelize.define('Trip',
 			allowNull: false
 		},
 		beginDate: {
-			type: Sequelize.DATE,
+			type: Sequelize.DATEONLY,
 			field: 'begin_date',
 			allowNull: false
 		},
 		endDate: {
-			type: Sequelize.DATE,
+			type: Sequelize.DATEONLY,
 			field: 'end_date',
 			allowNull: false
 		}
