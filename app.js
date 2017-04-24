@@ -8,6 +8,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const tripsRouter = require('./routes/trips');
+const memoriesRouter = require('./routes/memories');
 
 
 // Set up the express app
@@ -17,6 +18,7 @@ app.use(morgan('common'));
 app.use(bodyParser.json());
 
 app.use('/trips', tripsRouter);
+app.use('/memories', memoriesRouter);
 
 app.use('*', function(req, res) {
 	res.status(404).json({message: 'Not Found'});
