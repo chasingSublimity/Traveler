@@ -36,6 +36,7 @@ function generateBeginDate() {
 }
 
 function generateEndDate() {
+  // ask about effing witchcraft on that last date.
 	const dates = ['2017-08-28', '2017-09-15', '2017-10-08', '2017-11-05'];
 	return dates[Math.floor(Math.random() * dates.length)];
 }
@@ -184,10 +185,10 @@ describe('Trip API', function() {
           return Trip.findById(res.body.id);
         })
         .then(function(trip) {
-        	console.log(trip);
-        	console.log('trip.beginDate: ', trip.beginDate);
-        	console.log('newTripData.beginDate: ', newTripData.beginDate + 'T05:00:00.000Z');
-        	console.log(trip.beginDate === newTripData.beginDate);
+          // console.log(trip);
+          // console.log('trip.beginDate: ', trip.beginDate);
+          // console.log('newTripData.beginDate: ', newTripData.beginDate + 'T05:00:00.000Z');
+          // console.log(trip.beginDate === newTripData.beginDate);
           trip.origin.should.equal(newTripData.origin);
           trip.destination.should.equal(newTripData.destination);
 
@@ -198,40 +199,43 @@ describe('Trip API', function() {
     });
   });
 
-//   describe('PUT endpoint', function() {
+  describe('PUT endpoint', function() {
 
-//     // strategy:
-//     //  1. Get an existing restaurant from db
-//     //  2. Make a PUT request to update that restaurant
-//     //  3. Prove restaurant returned by request contains data we sent
-//     //  4. Prove restaurant in db is correctly updated
-//     it('should update fields you send over', function() {
-//       const updateData = {
-//         origin: 'fofofofofofofof',
-//         cuisine: 'futuristic fusion'
-//       };
+    // strategy:
+    //  1. Get an existing trip from db
+    //  2. Make a PUT request to update that trip
+    //  3. Prove trip returned by request contains data we sent
+    //  4. Prove trip in db is correctly updated
+    it('should update fields you send over', function() {
+      const updateData = {
+        origin: 'Las Vegas',
+        destination: 'Atlantis',
+        beginDate: '2017-07-28',
+        endDate: '2017-08-28'
+      };
 
-//       return Restaurant
-//         .findOne()
-//         .then(function(restaurant) {
-//           updateData.id = restaurant.id;
-//           console.log()
-//           // make request then inspect it to make sure it reflects
-//           // data we sent
-//           return chai.request(app)
-//             .put(`/restaurants/${restaurant.id}`)
-//             .send(updateData);
-//         })
-//         .then(function(res) {
-//           res.should.have.status(204);
-//           return Restaurant.findById(updateData.id);
-//         })
-//         .then(function(restaurant) {
-//           restaurant.name.should.equal(updateData.name);
-//           restaurant.cuisine.should.equal(updateData.cuisine);
-//         });
-//       });
-//   });
+      return Trip
+        .findOne()
+        .then(function(trip) {
+          updateData.id = trip.id;
+          // make request then inspect it to make sure it reflects
+          // data we sent
+          return chai.request(app)
+            .put(`/trips/${trip.id}`)
+            .send(updateData);
+        })
+        .then(function(res) {
+          res.should.have.status(204);
+          return Trip.findById(updateData.id);
+        })
+        .then(function(trip) {
+          trip.origin.should.equal(updateData.origin);
+          trip.destination.should.equal(updateData.destination);
+          // trip.beginDate.should.equal(updateData.beginDate);
+          // trip.endDate.should.equal(updateData.endDate);
+        });
+      });
+  });
 
 //   describe('DELETE endpoint', function() {
 //     // strategy:

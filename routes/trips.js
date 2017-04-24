@@ -60,40 +60,40 @@ router.post('/', (req, res) => {
   .catch(err => res.status(500).send({message: err.message}));
 });
 
-// // update a trip
-// router.put('/:id', (req, res) => {
-//   // ensure that the id in the request path and the one in request body match
-// 	if (!(req.params.id && req.body.id && req.params.id === req.body.id.toString())) {
-// 		const message = (
-// 		`Request path id (${req.params.id}) and request body id ` +
-// 		`(${req.body.id}) must match`);
-// 		console.error(message);
-// 		res.status(400).json({message: message});
-// 	}
+// update a trip
+router.put('/:id', (req, res) => {
+  // ensure that the id in the request path and the one in request body match
+  // 	ASK ABOUT THIS 
+	// if (!(req.params.id && req.body.id && req.params.id === req.body.id.toString())) {
+	// 	const message = (
+	// 	`Request path id (${req.params.id}) and request body id ` +
+	// 	`(${req.body.id}) must match`);
+	// 	console.error(message);
+	// 	res.status(400).json({message: message});
+	// }
 
-//   // we only support a subset of fields being updateable.
-//   // if the user sent over any of the updatableFields, we udpate those values
-//   // in document
-//   const toUpdate = {};
-//   const updateableFields = ['name', 'borough', 'cuisine', 'addressBuildingNumber', 'addressStreet', 'addressZipcode'];
+  // we only support a subset of fields being updateable.
+  // if the user sent over any of the updatableFields, we update those values
+  // in document
+	const toUpdate = {};
+	const updateableFields = ['origin', 'destination', 'beginDate', 'beginDate', 'endDate'];
 
-//   updateableFields.forEach(field => {
-//     if (field in req.body) {
-//       toUpdate[field] = req.body[field];
-//     }
-//   });
+	updateableFields.forEach(field => {
+		if (field in req.body) {
+			toUpdate[field] = req.body[field];
+		}
+	});
 
-//   return Restaurant
-//     // all key/value pairs in toUpdate will be updated.
-//     .update(toUpdate, {
-//       // we only update restaurants that have the id we sent in.
-//       where: {
-//         id: req.params.id
-//       }
-//     })
-//     .then(() => res.status(204).end())
-//     .catch(err => res.status(500).json({message: 'Internal server error'}));
-// });
+	return Trip
+    // all key/value pairs in toUpdate will be updated.
+    .update(toUpdate, {
+			where: {
+				id: req.params.id
+			}
+		})
+  .then(() => res.status(204).end())
+  .catch(err => res.status(500).json({message: 'Internal server error'}));
+});
 
 // // can delete a restaurant by id
 // router.delete('/:id', (req, res) => {
