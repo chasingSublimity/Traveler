@@ -258,10 +258,6 @@ describe('Trip API', function() {
           return Trip.findById(trip.id);
         })
         .then(function(_trip) {
-          // when a variable's value is null, chaining `should`
-          // doesn't work. so `_trip.should.be.null` would raise
-          // an error. `should.be.null(_trip)` is how we can
-          // make assertions about a null value.
           should.not.exist(_trip);
         });
     });
