@@ -62,17 +62,7 @@ router.post('/', (req, res) => {
 
 // update a trip
 router.put('/:id', (req, res) => {
-  // ensure that the id in the request path and the one in request body match
-  // 	ASK ABOUT THIS 
-	// if (!(req.params.id && req.body.id && req.params.id === req.body.id.toString())) {
-	// 	const message = (
-	// 	`Request path id (${req.params.id}) and request body id ` +
-	// 	`(${req.body.id}) must match`);
-	// 	console.error(message);
-	// 	res.status(400).json({message: message});
-	// }
 
-  // we only support a subset of fields being updateable.
   // if the user sent over any of the updatableFields, we update those values
   // in document
 	const toUpdate = {};
@@ -103,9 +93,24 @@ router.delete('/:id', (req, res) => {
         id: req.params.id
       }
     })
-    .then(trip => res.status(204).end())
+    .then(() => res.status(204).end())
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
+
+
+// can create a new Memory
+router.post('/:id/memories', (req, res) => {
+	return Memory.create({
+		tripId: req.body.tripId,
+		imgUrl: req.body.imgUrl,
+		location: req.body.location,
+		comments: req.body.comments,
+		dateCreated: req.body.dateCreated,
+	})
+  .then(memory => res.status(201).json(memory.apiRepr()))
+  .catch(err => res.status(500).send({message: err.message}));
+});
+
 
 // // can retrieve all the grades, if any, for a restaurant
 // router.get('/:id/grades', (req, res) => {
