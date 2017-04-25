@@ -112,22 +112,18 @@ router.post('/:id/memories', (req, res) => {
 });
 
 
-// // can retrieve all the grades, if any, for a restaurant
-// router.get('/:id/grades', (req, res) => {
-//   return Restaurant
-//     .findById(req.params.id, {
-//       // see notes in route for `/` above, for discussion of `include`
-//       // and eager loading.
-//       include: [{
-//           model: Grade,
-//           // since we're setting `tableName` in our model definition for `Grade`,
-//           // we need to use `as` here with the same table name
-//           as: 'grades'
-//       }]
-//     })
-//     .then(restaurant => res.json({
-//       grades: restaurant.grades.map(grade => grade.apiRepr())
-//     }));
-// });
+// can retrieve all the memories, if any, for a trip
+router.get('/:id/memories', (req, res) => {
+  return Trip
+    .findById(req.params.id, {
+      include: [{
+          model: Memory,
+          as: 'memories'
+      }]
+    })
+    .then(trip => res.json({
+      memories: trip.memories.map(memory => memory.apiRepr())
+    }));
+});
 
 module.exports = router;

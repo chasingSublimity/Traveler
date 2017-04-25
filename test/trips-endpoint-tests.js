@@ -263,30 +263,29 @@ describe('Trip API', function() {
     });
   });
 
-//   describe('GET grades for a restaurant endpoint', function() {
+  describe('GET memories for a trip endpoint', function() {
 
-//     it('should return all grades for a restaurant', function() {
-//       // strategy:
-//       //    1. get id of a restaurant
-//       //    2. get back its grades from api
-//       //    3. prove count and ids correct
-//       let restaurant;
+    it('should return all memories for a trip', function() {
+      // strategy:
+      //    1. get id of a trip
+      //    2. get back its memories from api
+      //    3. prove count and ids correct
+      let trip;
 
-//       return Restaurant
-//         .findOne({include: [{model: Grade, as: 'grades'}]})
-//         .then(_restaurant => {
-//           restaurant = _restaurant;
-//           return chai.request(app)
-//             .get(`/restaurants/${restaurant.id}/grades`);
-//         })
-//         .then(function(res) {
-//           // res.should.have.status(200);
-//           res.body.grades.length.should.equal(restaurant.grades.length);
-//           restaurant.grades.map(grade => grade.id).should.deep.equal(res.body.grades.map(grade => grade.id))
-//         });
-//     });
-//   });
-// });
+      return Trip
+        .findOne({include: [{model: Memory, as: 'memories'}]})
+        .then(_trip => {
+          trip = _trip;
+          return chai.request(app)
+            .get(`/trips/${trip.id}/memories`);
+        })
+        .then(function(res) {
+          res.should.have.status(200);
+          res.body.memories.length.should.equal(trip.memories.length);
+          trip.memories.map(memory => memory.id).should.deep.equal(res.body.memories.map(memory => memory.id))
+        });
+    });
+  });
 });
 
 module.exports = seedTripData();
