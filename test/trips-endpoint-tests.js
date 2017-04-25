@@ -265,6 +265,7 @@ describe('Trip API', function() {
 
   describe('GET memories for a trip endpoint', function() {
 
+    // TODO: SEED MEMORIES
     it('should return all memories for a trip', function() {
       // strategy:
       //    1. get id of a trip

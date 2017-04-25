@@ -4,6 +4,7 @@ CREATE TABLE trips (
   destination text NOT NULL,
   begin_date date NOT NULL,
   end_date date NOT NULL,
+  user_id int REFERENCES users ON DELETE CASCADE,
   created_at timestamp DEFAULT now(),
   updated_at timestamp DEFAULT now()
 );
