@@ -31,13 +31,10 @@ const Trip = sequelize.define('Trip',
 		}
 	}, {
     // we explicitly tell Sequelize that this model is linked
-    // to a table named 'trips' instead of having Sequelize
-    // automatically determine table names, which can be error
-    // prone
+    // to a table named 'trips'
 		tableName: 'trips',
     // this options ensures that if sequelize creates any
-    // tables on behalf of this model. Not currently necessary,
-    // but leaving it in case of future changes
+    // tables on behalf of this model.
 		underscored: true,
 		getterMethods: {
       // none right now, but may use getters in the future
@@ -52,10 +49,6 @@ const Trip = sequelize.define('Trip',
 						as: 'memories',
 						// this is how we make memory.trip_id non-nullable
 						foreignKey: { allowNull: false },
-						// when a trip is deleted, that should cascade
-						// to its memories. note that this correlates with the
-						// relationships we've established in
-						// the shell script
 						onDelete: 'CASCADE'
 					});
 			}

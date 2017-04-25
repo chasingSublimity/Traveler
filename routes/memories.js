@@ -5,7 +5,7 @@ const {Trip, Memory} = require('../models');
 
 // can get individual memories by id
 router.get('/:id', (req, res) => Memory.findById(req.params.id)
-	.then(trip => res.json(trip.apiRepr()))
+	.then(memory => res.json(memory.apiRepr()))
 );
 
 // update a memory

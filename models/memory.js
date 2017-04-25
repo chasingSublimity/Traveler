@@ -36,24 +36,15 @@ const Memory = sequelize.define('Memory',
 		// automatically determine table names, which can be error
 		// prone
 		tableName: 'memories',
-
-		// this options ensures that if sequelize creates any
-		// tables on behalf of this model (which in this app only
-		// happens when we call `sequelize.sync` in our tests), camelCased
-		// column names will be converted to snake_case for the database.
 		underscored: true,
+
 		classMethods: {
 			// relations between models are declared in `.classMethods.associate`.
 			associate: function(models) {
-				Memory.belongsTo(
-					models.Trip,
-					// this is how we make memory.trip_id non-nullable
-					// and ensure that when a trip is deleted, so to
-					// are its memories. note that this correlates to the
-					// relationships we've established in
-					// the migration file
-					{foreignKey: { allowNull: false }, onDelete: 'CASCADE' }
-				);
+				Memory.belongsTo(models.Trip, {
+					foreignKey: {allowNull: false},
+					onDelete: 'CASCADE' 
+				});
 			}
 		},
 		instanceMethods: {
@@ -62,19 +53,20 @@ const Memory = sequelize.define('Memory',
 			apiRepr: function() {
 				return {
 					id: this.id,
-					imgUrl: this.grade,
+					imgUrl: this.imgUrl,
 					location: this.location,
 					comments: this.comments,
-					dateCreated: this.dateCreated
+					dateCreated: this.dateCreated,
+					tripId: this.tripId
 				};
 			}
 		}
 	}
 );
 
-// Although we export `Grade` here, any code that needs `Grade`
+// Although we export `Memory` here, any code that needs `Memory`
 // should import it from `./models/index.js` (so, for instance,
-// `const {Grade} = require('./models')`).
+// `const {Memory} = require('./models')`).
 module.exports = {
 	Memory
 };
