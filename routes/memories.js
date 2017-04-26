@@ -28,7 +28,7 @@ router.put('/:id', (req, res) => {
   // if the user sent over any of the updatableFields, we update those values
   // in document
 	const toUpdate = {};
-	const updateableFields = ['imgUrl', 'comments', 'dateCreated'];
+	const updateableFields = ['imgUrl', 'comments', 'location', 'dateCreated'];
 
 	// build object to be used for updates
 	updateableFields.forEach(field => {

@@ -169,6 +169,41 @@ describe('Memory API', function() {
 				});
 		});
 	});
+
+	describe('PUT endpoint', function() {
+		// strategy:
+		//  1. Get an existing memory from db
+		//  2. Make a PUT request to update that memory
+		//  3. Prove memory returned by request contains data we sent
+		//  4. Prove memory in db is correctly updated
+		it('should update fields you send over', function() {
+			const updateData = {
+				imgUrl: 'http://placekitten.com/200/',
+				location: 'disneyland',
+				comments: 'HEY LOOK A NEW COMMENT',
+				dateCreated: moment().set({'year': 2010, 'month': 3, 'day': 10, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0}),
+			};
+
+			return Memory
+				.findOne()
+				.then(memory => {
+					console.log('entered into first then block');
+					updateData.id = memory.id;
+					return chai.request(app)
+						.put(`/memories/${memory.id}`)
+						.send(updateData);
+				}).then(res => {
+					console.log('entered into second then block');
+					res.should.have.status(204);
+					return Memory.findById(updateData.id);
+				}).then(memory => {
+					memory.imgUrl.should.equal(updateData.imgUrl);
+					memory.location.should.equal(updateData.location);
+					memory.comments.should.equal(updateData.comments);
+					moment.utc(memory.dateCreated).format().should.equal(moment.utc(updateData.dateCreated).format());
+				});
+		});
+	});
 });
 
 

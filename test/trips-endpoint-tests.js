@@ -186,14 +186,9 @@ describe('Trip API', function() {
           return Trip.findById(res.body.id);
         })
         .then(function(trip) {
-          // console.log(trip);
-          console.log('trip.beginDate: ', moment.utc(trip.beginDate).format());
-          console.log('newTripData.beginDate: ', moment.utc(newTripData.beginDate).format());
-          // console.log(typeof trip.beginDate);
-          // console.log(typeof newTripData.beginDate);
           trip.origin.should.equal(newTripData.origin);
           trip.destination.should.equal(newTripData.destination);
-
+          // moment.utc is used to homogenize the format of the dates.
           moment(trip.beginDate).format().should.equal(moment(newTripData.beginDate).format());
           moment(trip.endDate).format().should.equal(moment(newTripData.endDate).format());
         });
@@ -211,8 +206,8 @@ describe('Trip API', function() {
       const updateData = {
         origin: 'Las Vegas',
         destination: 'Atlantis',
-        beginDate: '2017-07-28',
-        endDate: '2017-08-28'
+        beginDate: moment().set({'year': 2011, 'month': 3, 'day': 10, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0}),
+        endDate: moment().set({'year': 2011, 'month': 3, 'day': 15, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0})
       };
 
       return Trip
@@ -224,16 +219,14 @@ describe('Trip API', function() {
           return chai.request(app)
             .put(`/trips/${trip.id}`)
             .send(updateData);
-        })
-        .then(function(res) {
+        }).then(function(res) {
           res.should.have.status(204);
           return Trip.findById(updateData.id);
-        })
-        .then(function(trip) {
+        }).then(function(trip) {
           trip.origin.should.equal(updateData.origin);
           trip.destination.should.equal(updateData.destination);
-          // trip.beginDate.should.equal(updateData.beginDate);
-          // trip.endDate.should.equal(updateData.endDate);
+          moment.utc(trip.beginDate).format().should.equal(moment.utc(updateData.beginDate).format());
+          moment.utc(trip.endDate).format().should.equal(moment.utc(updateData.endDate).format());
         });
       });
   });
