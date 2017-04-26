@@ -75,12 +75,13 @@ describe('Trip API', function() {
 			});
 	});
 
-  // drop rows after all tests
-  after(function() {
-		console.log('dropping rows...');
-		return Trip
-			.truncate({cascade:true});
-  });
+  // Only used for debugging.
+  // drop rows after all tests.
+  // after(function() {
+		// console.log('dropping rows...');
+		// return Trip
+		// 	.truncate({cascade:true});
+  // });
 
 	describe('GET endpoint', function() {
 

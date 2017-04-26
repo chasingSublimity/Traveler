@@ -26,7 +26,6 @@ function generateMemoryData(tripId) {
 			comments: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
 								sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
 			dateCreated: now,
-			// this is really weird.
 			tripId: tripId
 		}
 	);
@@ -79,7 +78,8 @@ describe('Memory API', function() {
 			});
 	});
 
-	// drop rows after all tests. only used for debugging.
+	// only used for debugging
+	// drop rows after all tests.
 	// after(function() {
 	// 	console.log('tests finished, dropping rows...');
 	// 	return Memory
