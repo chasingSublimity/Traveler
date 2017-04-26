@@ -22,12 +22,18 @@ const Trip = sequelize.define('Trip',
 		beginDate: {
 			type: Sequelize.DATEONLY,
 			field: 'begin_date',
-			allowNull: false
+			allowNull: false,
+			validate: {
+				isDate: true
+			}
 		},
 		endDate: {
 			type: Sequelize.DATEONLY,
 			field: 'end_date',
-			allowNull: false
+			allowNull: false,
+			validate: {
+				isDate: true
+			}
 		}
 	}, {
     // we explicitly tell Sequelize that this model is linked

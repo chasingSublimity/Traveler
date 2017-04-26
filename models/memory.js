@@ -15,7 +15,10 @@ const Memory = sequelize.define('Memory',
 		imgUrl: {
 			type: Sequelize.STRING,
 			allowNull: false,
-			field: 'img_url'
+			field: 'img_url',
+			validate: {
+				isURL: true
+			}
 		},
 		location: {
 			type: Sequelize.TEXT,
@@ -28,7 +31,10 @@ const Memory = sequelize.define('Memory',
 		dateCreated: {
 			type: Sequelize.DATE,
 			field: 'date_created',
-			allowNull: false
+			allowNull: false,
+			validate: {
+				isDate: true
+			}
 		},
 	}, {
 		// we explicitly tell Sequelize that this model is linked
