@@ -204,6 +204,30 @@ describe('Memory API', function() {
 				});
 		});
 	});
+
+	describe('DELETE endpoint', function() {
+		// strategy:
+		//  1. get a memory
+		//  2. make a DELETE request for that memory's id
+		//  3. assert that response has right status code
+		//  4. prove that memory with the id doesn't exist in db anymore
+
+		it('delte a memory by id', function() {
+			let memory;
+
+			return Memory
+				.findOne()
+				.then(_memory => {
+					memory = _memory;
+					return chai.request(app).delete(`/memories/${memory.id}`);
+				}).then(res => {
+					res.should.have.status(204);
+					return Trip.findById(memory.id);
+				}).then(_memroy => {
+					should.not.exist(_memroy);
+				});
+		});
+	});
 });
 
 
