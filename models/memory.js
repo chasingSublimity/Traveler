@@ -42,7 +42,11 @@ const Memory = sequelize.define('Memory',
 			// relations between models are declared in `.classMethods.associate`.
 			associate: function(models) {
 				Memory.belongsTo(models.Trip, {
-					foreignKey: {allowNull: false},
+					foreignKey: {
+						name: 'tripId',
+						field: 'trip_id',
+						allowNull: false
+					},
 					onDelete: 'CASCADE' 
 				});
 			}

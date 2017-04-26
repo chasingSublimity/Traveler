@@ -48,7 +48,11 @@ const Trip = sequelize.define('Trip',
 					{
 						as: 'memories',
 						// this is how we make memory.trip_id non-nullable
-						foreignKey: { allowNull: false },
+						foreignKey: { 
+							name: 'tripId',
+							field: 'trip_id',
+							allowNull: false 
+						},
 						onDelete: 'CASCADE'
 					});
 			}
