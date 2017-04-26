@@ -97,21 +97,6 @@ router.delete('/:id', (req, res) => {
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
-
-// can create a new Memory
-router.post('/:id/memories', (req, res) => {
-	return Memory.create({
-		tripId: req.body.tripId,
-		imgUrl: req.body.imgUrl,
-		location: req.body.location,
-		comments: req.body.comments,
-		dateCreated: req.body.dateCreated,
-	})
-  .then(memory => res.status(201).json(memory.apiRepr()))
-  .catch(err => res.status(500).send({message: err.message}));
-});
-
-
 // can retrieve all the memories, if any, for a trip
 router.get('/:id/memories', (req, res) => {
   return Trip

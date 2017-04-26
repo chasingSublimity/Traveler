@@ -8,6 +8,21 @@ router.get('/:id', (req, res) => Memory.findById(req.params.id)
 	.then(memory => res.json(memory.apiRepr()))
 );
 
+
+// can create a new Memory
+router.post('/', (req, res) => {
+	return Memory.create({
+		tripId: req.body.tripId,
+		imgUrl: req.body.imgUrl,
+		location: req.body.location,
+		comments: req.body.comments,
+		dateCreated: req.body.dateCreated,
+	})
+  .then(memory => res.status(201).json(memory.apiRepr()))
+  .catch(err => res.status(500).send({message: err.message}));
+});
+
+
 // update a memory
 router.put('/:id', (req, res) => {
   // if the user sent over any of the updatableFields, we update those values
