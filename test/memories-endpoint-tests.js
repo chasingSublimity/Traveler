@@ -27,7 +27,7 @@ function generateMemoryData(tripId) {
 								sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
 			dateCreated: now,
 			// this is really weird.
-			trip_id: tripId
+			tripId: tripId
 		}
 	);
 }
@@ -114,7 +114,8 @@ describe('Memory API', function() {
 				.then(_memory => {
 					memory = _memory;
 					return chai.request(app)
-						.get(`/memories/${memory.id}`)
+						.get(`/memories/${memory.id}`);
+				})
 				.then(function(res) {
 					res.should.have.status(200);
 					res.should.be.json;
@@ -122,8 +123,52 @@ describe('Memory API', function() {
 					res.body.should.include.keys(
 							'id', 'imgUrl', 'location', 'comments', 'dateCreated');
 				});
-			});
+		});
+	});
+
+	describe('POST endpoint', function() {
+
+		it ('should add a new memory', function() {
+		// Strategy: make a POST request with data
+		// the prove that the response data matches the seed data and
+		// that the 'id' is present, which means that the data was inserted 
+		// into the db.
+		// Next, we query the db and ensure that the data in the db matches the seed data.
+			const newMemoryData = {
+				imgUrl: 'http://placekitten.com/200/300',
+				location: generateLocation(),
+				comments: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+									sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
+				dateCreated: moment().set({'year': 2013, 'month': 3, 'day': 10, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0}),
+				tripId: tripId
+			};
+			return chai.request(app).post('/memories').send(newMemoryData)
+				.then(res => {
+					res.should.have.status(201);
+					res.should.be.json;
+					res.body.should.be.a('object');
+					res.body.should.include.keys(
+						'id', 'imgUrl', 'location', 'comments', 'dateCreated', 'tripId'
+						);
+					res.body.imgUrl.should.equal(newMemoryData.imgUrl);
+					res.body.location.should.equal(newMemoryData.location);
+					res.body.comments.should.equal(newMemoryData.comments);
+					moment.utc(res.body.dateCreated).format().should.equal(moment.utc(newMemoryData.dateCreated).format());
+					res.body.tripId.should.equal(newMemoryData.tripId);
+					res.body.id.should.not.be.null;
+
+					// check memory in db with seed data
+					return Memory.findById(res.body.id);
+				})
+				.then(memory => {
+					memory.imgUrl.should.equal(newMemoryData.imgUrl);
+					memory.location.should.equal(newMemoryData.location);
+					memory.comments.should.equal(newMemoryData.comments);
+					moment(memory.dateCreated).format().should.equal(moment(newMemoryData.dateCreated).format());
+					memory.tripId.should.equal(newMemoryData.tripId);
+				});
 		});
 	});
 });
+
 
