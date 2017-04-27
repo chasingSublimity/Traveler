@@ -239,7 +239,7 @@ describe('Trip API', function() {
     //  4. prove that trip with the id doesn't exist in db anymore
     it('delete a trip by id', function() {
 
-      let trip;
+			let trip;
 
       return Trip
         .findOne()

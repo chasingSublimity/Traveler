@@ -28,9 +28,8 @@ const Memory = sequelize.define('Memory',
 			type: Sequelize.TEXT,
 			allowNull: true
 		},
-		dateCreated: {
+		date: {
 			type: Sequelize.DATE,
-			field: 'date_created',
 			allowNull: false,
 			validate: {
 				isDate: true
@@ -66,7 +65,7 @@ const Memory = sequelize.define('Memory',
 					imgUrl: this.imgUrl,
 					location: this.location,
 					comments: this.comments,
-					dateCreated: this.dateCreated,
+					date: this.date,
 					tripId: this.tripId
 				};
 			}

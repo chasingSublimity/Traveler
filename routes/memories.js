@@ -16,7 +16,7 @@ router.post('/', (req, res) => {
 		imgUrl: req.body.imgUrl,
 		location: req.body.location,
 		comments: req.body.comments,
-		dateCreated: req.body.dateCreated,
+		date: req.body.date,
 	})
   .then(memory => res.status(201).json(memory.apiRepr()))
   .catch(err => res.status(500).send({message: err.message}));
@@ -28,7 +28,7 @@ router.put('/:id', (req, res) => {
   // if the user sent over any of the updatableFields, we update those values
   // in document
 	const toUpdate = {};
-	const updateableFields = ['imgUrl', 'comments', 'location', 'dateCreated'];
+	const updateableFields = ['imgUrl', 'comments', 'location', 'date'];
 
 	// build object to be used for updates
 	updateableFields.forEach(field => {

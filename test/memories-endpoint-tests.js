@@ -25,7 +25,7 @@ function generateMemoryData(tripId) {
 			location: generateLocation(),
 			comments: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
 								sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
-			dateCreated: now,
+			date: now,
 			tripId: tripId
 		}
 	);
@@ -121,12 +121,15 @@ describe('Memory API', function() {
 					res.should.be.json;
 					res.body.should.be.a('object');
 					res.body.should.include.keys(
-							'id', 'imgUrl', 'location', 'comments', 'dateCreated');
+							'id', 'imgUrl', 'location', 'comments', 'date');
 				});
 		});
 	});
 
 	describe('POST endpoint', function() {
+
+		// test for failing cases
+
 
 		it ('should add a new memory', function() {
 		// Strategy: make a POST request with data
@@ -139,7 +142,7 @@ describe('Memory API', function() {
 				location: generateLocation(),
 				comments: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
 									sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
-				dateCreated: moment().set({'year': 2013, 'month': 3, 'day': 10, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0}),
+				date: moment().set({'year': 2013, 'month': 3, 'day': 10, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0}),
 				tripId: tripId
 			};
 			return chai.request(app).post('/memories').send(newMemoryData)
@@ -148,12 +151,12 @@ describe('Memory API', function() {
 					res.should.be.json;
 					res.body.should.be.a('object');
 					res.body.should.include.keys(
-						'id', 'imgUrl', 'location', 'comments', 'dateCreated', 'tripId'
+						'id', 'imgUrl', 'location', 'comments', 'date', 'tripId'
 						);
 					res.body.imgUrl.should.equal(newMemoryData.imgUrl);
 					res.body.location.should.equal(newMemoryData.location);
 					res.body.comments.should.equal(newMemoryData.comments);
-					moment.utc(res.body.dateCreated).format().should.equal(moment.utc(newMemoryData.dateCreated).format());
+					moment.utc(res.body.date).format().should.equal(moment.utc(newMemoryData.date).format());
 					res.body.tripId.should.equal(newMemoryData.tripId);
 					res.body.id.should.not.be.null;
 
@@ -164,8 +167,11 @@ describe('Memory API', function() {
 					memory.imgUrl.should.equal(newMemoryData.imgUrl);
 					memory.location.should.equal(newMemoryData.location);
 					memory.comments.should.equal(newMemoryData.comments);
-					moment(memory.dateCreated).format().should.equal(moment(newMemoryData.dateCreated).format());
+					moment(memory.date).format().should.equal(moment(newMemoryData.date).format());
 					memory.tripId.should.equal(newMemoryData.tripId);
+				})
+				.catch(err => {
+					console.log('error is: ', err);
 				});
 		});
 	});
@@ -181,26 +187,27 @@ describe('Memory API', function() {
 				imgUrl: 'http://placekitten.com/200/',
 				location: 'disneyland',
 				comments: 'HEY LOOK A NEW COMMENT',
-				dateCreated: moment().set({'year': 2010, 'month': 3, 'day': 10, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0}),
+				date: moment().set({'year': 2010, 'month': 3, 'day': 10, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0}),
 			};
 
 			return Memory
 				.findOne()
 				.then(memory => {
-					console.log('entered into first then block');
 					updateData.id = memory.id;
 					return chai.request(app)
 						.put(`/memories/${memory.id}`)
 						.send(updateData);
 				}).then(res => {
-					console.log('entered into second then block');
 					res.should.have.status(204);
 					return Memory.findById(updateData.id);
 				}).then(memory => {
 					memory.imgUrl.should.equal(updateData.imgUrl);
 					memory.location.should.equal(updateData.location);
 					memory.comments.should.equal(updateData.comments);
-					moment.utc(memory.dateCreated).format().should.equal(moment.utc(updateData.dateCreated).format());
+					// moment is used here to homogenize date formats
+					console.log(memory.date);
+					console.log(updateData.date);
+					moment.utc(memory.date).format().should.equal(moment.utc(updateData.date).format());
 				});
 		});
 	});
@@ -212,7 +219,7 @@ describe('Memory API', function() {
 		//  3. assert that response has right status code
 		//  4. prove that memory with the id doesn't exist in db anymore
 
-		it('delte a memory by id', function() {
+		it('delete a memory by id', function() {
 			let memory;
 
 			return Memory
