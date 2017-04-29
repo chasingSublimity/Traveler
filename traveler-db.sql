@@ -14,8 +14,17 @@ CREATE TABLE memories (
   trip_id int REFERENCES trips ON DELETE CASCADE,
   img_url text,
   location text NOT NULL,
-  date_created date NOT NULL,
+  date date NOT NULL,
   comments text,
+  created_at timestamp DEFAULT now(),
+  updated_at timestamp DEFAULT now()
+);
+
+CREATE TABLE users (
+  id serial PRIMARY KEY,
+  first_name text NOT NULL,
+  last_name text,
+  user_name text NOT NULL,
   created_at timestamp DEFAULT now(),
   updated_at timestamp DEFAULT now()
 );
