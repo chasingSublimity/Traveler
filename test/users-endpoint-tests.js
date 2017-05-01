@@ -21,8 +21,8 @@ function seedUserData(seedNum=10) {
 function generateUserData() {
 	return User.create(
 		{
-			firstName: faker.firstName(),
-			lastName: faker.lasetName(),
+			firstName: faker.name.firstName(),
+			lastName: faker.name.lastName(),
 			userName: faker.internet.userName(),
 			createdAt: now,
 			updatedAt: now
@@ -65,7 +65,11 @@ describe('User API', function() {
     // the data was inserted into db)
     it('should add a new user', function() {
 
-      const newUserData = generateUserData();
+      const newUserData = {
+				firstName: faker.name.firstName(),
+				lastName: faker.name.lastName(),
+				userName: faker.internet.userName(),
+      };
 
       return chai.request(app).post('/users').send(newUserData)
         .then(function(res) {
