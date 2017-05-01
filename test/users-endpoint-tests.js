@@ -157,3 +157,5 @@ describe('User API', function() {
     });
   });
 });
+
+module.exports = seedUserData;
