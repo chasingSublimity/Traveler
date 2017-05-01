@@ -1,19 +1,18 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const faker = require('faker');
 const moment = require('moment-timezone');
 const app = require('../app');
-const {Trip, Memory} = require('../models');
-
+const {Trip, Memory, User} = require('../models');
+const seedUserData = require('./users-endpoint-tests');
 const should = chai.should();
 const now = moment();
 
 chai.use(chaiHttp);
 
-function seedTripData(seedNum=10) {
+function seedTripData(seedNum=10, userId) {
 	const trips = [];
 	for (let i=1; i<=seedNum; i++) {
-		trips.push(generateTripData());
+		trips.push(generateTripData(userId));
 	}
 	return Promise.all(trips);
 }
@@ -42,13 +41,14 @@ function generateEndDate() {
 	return dates[Math.floor(Math.random() * dates.length)];
 }
 
-function generateTripData() {
+function generateTripData(userId) {
 	return Trip.create(
 		{
 			origin: generateOriginName(),
 			destination: generateDestinationName(),
 			beginDate: generateBeginDate(),
 			endDate: generateEndDate(),
+			userId: userId,
 			createdAt: now,
 			updatedAt: now
 		}, {
@@ -61,6 +61,23 @@ function generateTripData() {
 
 describe('Trip API', function() {
 
+  // this needs to be accessed by different tests, so we define it
+  // in the parent scope of the trip-endpoint tests
+  let userId;
+
+  before(function() {
+    console.log('seeding user data...');
+    // seedUserData is imported from users-endpoint tests
+    seedUserData(1);
+    // grab a trip_id from the DB and assign it to the tripId in the 
+    // parent scope
+    return User
+      .findOne()
+      .then(user => {
+        userId = user.id;
+      });
+  });
+
   // to make tests quicker, only drop all rows from each
   // table in between tests, instead of recreating tables
   beforeEach(function() {
@@ -71,7 +88,7 @@ describe('Trip API', function() {
 			// then seed db with new test data
 			.then(() => {
 				console.log('seeding rows...');
-				return seedTripData();
+				return seedTripData(5, userId);
 			});
 	});
 
@@ -143,7 +160,7 @@ describe('Trip API', function() {
           res.body.trips.forEach(function(trip) {
             trip.should.be.a('object');
             trip.should.include.keys(
-              'id', 'origin', 'destination', 'beginDate', 'endDate');
+              'id', 'origin', 'destination', 'beginDate', 'endDate', 'userId');
         });
       });
     });
@@ -161,6 +178,7 @@ describe('Trip API', function() {
         destination: generateDestinationName(),
 				beginDate: moment().set({'year': 2013, 'month': 3, 'day': 10, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0}),
 				endDate: moment().set({'year': 2013, 'month': 3, 'day': 15, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0}),
+				userId: userId,
         createdAt: now,
         updatedAt: now
       };
