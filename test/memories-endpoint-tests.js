@@ -3,8 +3,9 @@ const chaiHttp = require('chai-http');
 const faker = require('faker');
 const moment = require('moment-timezone');
 const app = require('../app');
-const {Trip, Memory} = require('../models');
+const {Trip, Memory, User} = require('../models');
 const seedTripData = require('./trips-endpoint-tests');
+const seedUserData = require('./users-endpoint-tests');
 const should = chai.should();
 const now = moment();
 
@@ -39,22 +40,43 @@ function seedMemoryData(seedNum=1, tripId) {
 	}
 	return Promise.all(memories)
 		.catch(error => {
-			console.log('error: ', error);
+			console.log('seedMemory error: ', error);
 		});
 }
 
 describe('Memory API', function() {
 
-	// this needs to be accessed by different tests, so we define it
+
+
+	// these needs to be accessed by different scopes, so we define it
 	// in the parent scope of the memory-endpoint tests
+	let userId;
 	let tripId;
+
+	// before the test cycle, seed the test db with a user so that the relations
+	// can be tested
+	before(function() {
+		console.log('seeding user data...');
+		// seedUserData is imported from users-endpoint
+		seedUserData(1);
+
+		// grab a user_id from the DB and assign it to the userId in the
+		// parent scope
+		return User
+			.findOne()
+			.then(user => {
+				userId = user.id;
+			});
+	});
 
 	// before the test cycle, seed the test db with a trip so that the relations 
 	// can be tested.
 	before(function() {
 		console.log('seeding trip data...');
 		// seedTripData is imported from trips-endpoint tests
-		seedTripData(1);
+		// the first argument is the amount of trips, the second is
+		// a userId
+		seedTripData(1, userId);
 		// grab a trip_id from the DB and assign it to the tripId in the 
 		// parent scope
 		return Trip
@@ -169,9 +191,6 @@ describe('Memory API', function() {
 					memory.comments.should.equal(newMemoryData.comments);
 					moment(memory.date).format().should.equal(moment(newMemoryData.date).format());
 					memory.tripId.should.equal(newMemoryData.tripId);
-				})
-				.catch(err => {
-					console.log('error is: ', err);
 				});
 		});
 	});
