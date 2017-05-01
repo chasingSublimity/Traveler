@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const morgan = require('morgan');
 
+const usersRouter = require('./routes/users');
 const tripsRouter = require('./routes/trips');
 const memoriesRouter = require('./routes/memories');
 
@@ -17,6 +18,7 @@ const app = express();
 app.use(morgan('common'));
 app.use(bodyParser.json());
 
+app.use('/users', usersRouter);
 app.use('/trips', tripsRouter);
 app.use('/memories', memoriesRouter);
 

@@ -34,7 +34,7 @@ const Memory = sequelize.define('Memory',
 			validate: {
 				isDate: true
 			}
-		},
+		}
 	}, {
 		// we explicitly tell Sequelize that this model is linked
 		// to a table named 'memories' instead of having Sequelize

@@ -37,16 +37,6 @@ router.get('/:id', (req, res) => Trip.findById(req.params.id, {
 
 // can create a new trip
 router.post('/', (req, res) => {
-  // ensure we have required fields
-	const requiredFields = ['origin', 'destination', 'beginDate', 'endDate'];
-	for (let i=0; i<requiredFields.length; i++) {
-		const field = requiredFields[i];
-		if (!(field in req.body)) {
-			const message = `Missing \`${field}\` in request body`;
-			console.error(message);
-			return res.status(400).send(message);
-		}
-	}
   // `.create` creates a new instance and saves it to the db
   // in a single step.
   // http://docs.sequelizejs.com/en/latest/api/model/#createvalues-options-promiseinstance
@@ -76,7 +66,7 @@ router.put('/:id', (req, res) => {
 
 	return Trip
     // all key/value pairs in toUpdate will be updated.
-    .update(toUpdate, {
+		.update(toUpdate, {
 			where: {
 				id: req.params.id
 			}
@@ -87,28 +77,28 @@ router.put('/:id', (req, res) => {
 
 // can delete a restaurant by id
 router.delete('/:id', (req, res) => {
-  return Trip
-    .destroy({
-      where: {
-        id: req.params.id
-      }
-    })
+	return Trip
+		.destroy({
+			where: {
+				id: req.params.id
+			}
+		})
     .then(() => res.status(204).end())
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
 // can retrieve all the memories, if any, for a trip
 router.get('/:id/memories', (req, res) => {
-  return Trip
-    .findById(req.params.id, {
-      include: [{
-          model: Memory,
-          as: 'memories'
-      }]
-    })
-    .then(trip => res.json({
-      memories: trip.memories.map(memory => memory.apiRepr())
-    }));
+	return Trip
+		.findById(req.params.id, {
+			include: [{
+				model: Memory,
+				as: 'memories'
+			}]
+		})
+		.then(trip => res.json({
+			memories: trip.memories.map(memory => memory.apiRepr())
+		}));
 });
 
 module.exports = router;
