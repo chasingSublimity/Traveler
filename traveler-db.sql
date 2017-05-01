@@ -1,3 +1,12 @@
+CREATE TABLE users (
+  id serial PRIMARY KEY,
+  first_name text NOT NULL,
+  last_name text,
+  user_name text NOT NULL,
+  created_at timestamp DEFAULT now(),
+  updated_at timestamp DEFAULT now()
+);
+
 CREATE TABLE trips (
   id serial PRIMARY KEY,
   origin text NOT NULL,
@@ -16,15 +25,6 @@ CREATE TABLE memories (
   location text NOT NULL,
   date date NOT NULL,
   comments text,
-  created_at timestamp DEFAULT now(),
-  updated_at timestamp DEFAULT now()
-);
-
-CREATE TABLE users (
-  id serial PRIMARY KEY,
-  first_name text NOT NULL,
-  last_name text,
-  user_name text NOT NULL,
   created_at timestamp DEFAULT now(),
   updated_at timestamp DEFAULT now()
 );
