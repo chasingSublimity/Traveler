@@ -61,6 +61,14 @@ const Trip = sequelize.define('Trip',
 						},
 						onDelete: 'CASCADE'
 					});
+				Trip.belongsTo(models.User, {
+					foreignKey: {
+						name: 'userId',
+						field: 'user_id',
+						allowNull: false
+					},
+					onDelete: 'CASCADE' 
+				});
 			}
 		},
 		instanceMethods: {
@@ -72,7 +80,8 @@ const Trip = sequelize.define('Trip',
 					origin: this.origin,
 					destination: this.destination,
 					beginDate: this.beginDate,
-					endDate: this.endDate
+					endDate: this.endDate,
+					userId: this.userId
 				};
 			}
 		}

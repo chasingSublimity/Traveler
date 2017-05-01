@@ -45,6 +45,7 @@ router.post('/', (req, res) => {
 		destination: req.body.destination,
 		beginDate: req.body.beginDate,
 		endDate: req.body.endDate,
+		userId: req.body.userId
 	})
   .then(trip => res.status(201).json(trip.apiRepr()))
   .catch(err => res.status(500).send({message: err.message}));
