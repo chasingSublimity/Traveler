@@ -11,7 +11,8 @@ router.post('/', (req, res) => {
 	return User.create({
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
-		userName: req.body.userName
+		userName: req.body.userName,
+		password: req.body.password
 	})
   .then(user => res.status(201).json(user.apiRepr()))
   .catch(err => res.status(500).send({message: err.message}));
@@ -23,7 +24,7 @@ router.put('/:id', (req, res) => {
   // if the user sent over any of the updatableFields, we update those values
   // in document
 	const toUpdate = {};
-	const updateableFields = ['firstName', 'lastName', 'userName'];
+	const updateableFields = ['firstName', 'lastName', 'userName', 'password'];
 
 	updateableFields.forEach(field => {
 		if (field in req.body) {

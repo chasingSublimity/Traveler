@@ -24,6 +24,7 @@ function generateUserData() {
 			firstName: faker.name.firstName(),
 			lastName: faker.name.lastName(),
 			userName: faker.internet.userName(),
+      password: faker.internet.password(),
 			createdAt: now,
 			updatedAt: now
 		}, {
@@ -69,6 +70,7 @@ describe('User API', function() {
 				firstName: faker.name.firstName(),
 				lastName: faker.name.lastName(),
 				userName: faker.internet.userName(),
+        password: faker.internet.password()
       };
 
       return chai.request(app).post('/users').send(newUserData)
@@ -78,13 +80,14 @@ describe('User API', function() {
           res.should.be.json;
           res.body.should.be.a('object');
           res.body.should.include.keys(
-            'id', 'firstName', 'lastName', 'userName');
+            'id', 'firstName', 'lastName', 'userName', 'password');
           // db should have created id on insertion
           res.body.id.should.not.be.null;
           // verify the response sent by db equals the user data we made
           res.body.firstName.should.equal(newUserData.firstName);
           res.body.lastName.should.equal(newUserData.lastName);
           res.body.userName.should.equal(newUserData.userName);
+          res.body.password.should.equal(newUserData.password);
 
           // check the user created in db with seed data
           return User.findById(res.body.id);
@@ -93,6 +96,7 @@ describe('User API', function() {
           user.firstName.should.equal(newUserData.firstName);
           user.lastName.should.equal(newUserData.lastName);
           user.userName.should.equal(newUserData.userName);
+          user.password.should.equal(newUserData.password);
         });
     });
   });
@@ -108,7 +112,8 @@ describe('User API', function() {
       const updateData = {
         firstName: 'Blake',
         lastName: 'Sager',
-        userName: 'chasingSublimity'
+        userName: 'chasingSublimity',
+        password: 'badasspassword'
       };
 
       return User
@@ -127,6 +132,7 @@ describe('User API', function() {
           user.firstName.should.equal(updateData.firstName);
           user.lastName.should.equal(updateData.lastName);
           user.userName.should.equal(updateData.userName);
+          user.password.should.equal(updateData.password);
         });
       });
   });

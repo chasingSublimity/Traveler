@@ -3,6 +3,7 @@ CREATE TABLE users (
   first_name text NOT NULL,
   last_name text,
   user_name text NOT NULL,
+  password text NOT NULL,
   created_at timestamp DEFAULT now(),
   updated_at timestamp DEFAULT now()
 );

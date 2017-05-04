@@ -24,6 +24,10 @@ const User = sequelize.define('User',
 			type: Sequelize.TEXT,
 			field: 'user_name',
 			allowNull: false
+		},
+		password: {
+			type: Sequelize.TEXT,
+			allowNull: false
 		}
 	}, {
     // we explicitly tell Sequelize that this model is linked
@@ -60,7 +64,8 @@ const User = sequelize.define('User',
 					id: this.id,
 					firstName: this.firstName,
 					lastName: this.lastName,
-					userName: this.userName
+					userName: this.userName,
+					password: this.password
 				};
 			}
 		}
