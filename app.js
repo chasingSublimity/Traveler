@@ -14,8 +14,8 @@ const memoriesRouter = require('./routes/memories');
 // aws import and configuration
 var aws = require('aws-sdk');
 aws.config.update({
-    accessKeyId: 'AKIAINWKXLCLCCJWMNUA',
-    secretAccessKey: '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'
+    accessKeyId: process.env.ACCESSKEYID,
+    secretAccessKey: process.env.SECRETACCESSKEY
 });
 
 
