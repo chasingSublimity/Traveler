@@ -11,6 +11,13 @@ const usersRouter = require('./routes/users');
 const tripsRouter = require('./routes/trips');
 const memoriesRouter = require('./routes/memories');
 
+// aws import and configuration
+var aws = require('aws-sdk');
+aws.config.update({
+    accessKeyId: 'AKIAINWKXLCLCCJWMNUA',
+    secretAccessKey: '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'
+});
+
 
 // Set up the express app
 const app = express();
@@ -25,9 +32,31 @@ app.use(function(req, res, next) {
 	next();
 });
 
+// app routes
 app.use('/users', usersRouter);
 app.use('/trips', tripsRouter);
 app.use('/memories', memoriesRouter);
+
+// aws signedUrl endpoint
+app.get('/awsUrl', function(filename, filetype) {
+	var s3 = new aws.S3();
+
+	var params = {
+		Bucket: 'traveler-images',
+		Key: filename,
+		Expires: 60,
+		ContentType: filetype
+	};
+
+	s3.getSignedUrl(putObject, params, function(err, data) {
+		if (err) {
+			console.log(err);
+			return err;
+		} else {
+			return data;
+		}
+	});
+});
 
 app.use('*', function(req, res) {
 	res.status(404).json({message: 'Not Found'});

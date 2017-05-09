@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "main": "server.js",
   "dependencies": {
+    "aws-sdk": "^2.49.0",
     "body-parser": "^1.15.2",
     "express": "^4.15.2",
     "moment": "^2.18.1",
