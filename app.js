@@ -23,6 +23,9 @@ aws.config.update({
 const app = express();
 
 app.use(morgan('common'));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(bodyParser.json());
 
 // allow cross origin requests
@@ -38,7 +41,9 @@ app.use('/trips', tripsRouter);
 app.use('/memories', memoriesRouter);
 
 // aws signedUrl endpoint
-app.get('/awsUrl', function(filename, filetype) {
+app.get('/awsUrl', function(req, res) {
+	const {filename, filetype} = req.query;
+	console.log(filename, filetype);
 	var s3 = new aws.S3();
 
 	var params = {
@@ -53,7 +58,7 @@ app.get('/awsUrl', function(filename, filetype) {
 			console.log(err);
 			return err;
 		} else {
-			return data;
+			res.json({signedUrl: data});
 		}
 	});
 });
