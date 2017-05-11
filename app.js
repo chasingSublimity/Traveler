@@ -14,17 +14,18 @@ const memoriesRouter = require('./routes/memories');
 // aws import and configuration
 var aws = require('aws-sdk');
 aws.config.update({
-    accessKeyId: process.env.ACCESSKEYID,
-    secretAccessKey: process.env.SECRETACCESSKEY
+	accessKeyId: process.env.ACCESSKEYID,
+	secretAccessKey: process.env.SECRETACCESSKEY
 });
 
 
 // Set up the express app
 const app = express();
 
+// middleware
 app.use(morgan('common'));
 app.use(bodyParser.urlencoded({
-  extended: true
+	extended: true
 }));
 app.use(bodyParser.json());
 
@@ -41,9 +42,11 @@ app.use('/trips', tripsRouter);
 app.use('/memories', memoriesRouter);
 
 // aws signedUrl endpoint
+// this gets a temporary url from AWS and sends that url back to the client,
+// which then makes a put request adding the image
 app.get('/awsUrl', function(req, res) {
 	const {filename, filetype} = req.query;
-	console.log(filename, filetype);
+	// init new s3 instance from aws sdk
 	var s3 = new aws.S3();
 
 	var params = {
@@ -63,6 +66,7 @@ app.get('/awsUrl', function(req, res) {
 	});
 });
 
+// 404 catchall
 app.use('*', function(req, res) {
 	res.status(404).json({message: 'Not Found'});
 });
