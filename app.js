@@ -12,7 +12,7 @@ const usersRouter = require('./routes/users');
 const tripsRouter = require('./routes/trips');
 const memoriesRouter = require('./routes/memories');
 const awsRouter = require('./routes/aws');
-const authRouter = require('./routes/authenticationRouter');
+const authRouter = require('./routes/authRouter');
 
 const app = express();
 
