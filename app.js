@@ -1,33 +1,29 @@
-// we've separated out our app and server. `app`
+// separated out the app and server. `app`
 // is responsible for coordinating routes and middleware.
 // server is responsible for serving the app defined
 // in this file.
 
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const express = require('express');
-const morgan = require('morgan');
+const passport = require('passport');
 
 const usersRouter = require('./routes/users');
 const tripsRouter = require('./routes/trips');
 const memoriesRouter = require('./routes/memories');
+const awsRouter = require('./routes/aws');
+const authRouter = require('./routes/authenticationRouter');
 
-// aws import and configuration
-var aws = require('aws-sdk');
-aws.config.update({
-	accessKeyId: process.env.ACCESSKEYID,
-	secretAccessKey: process.env.SECRETACCESSKEY
-});
-
-
-// Set up the express app
 const app = express();
 
 // middleware
-app.use(morgan('common'));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
-app.use(bodyParser.json());
+app.use(morgan('common'));
+app.use(passport.initialize());
+
 
 // allow cross origin requests
 app.use(function(req, res, next) {
@@ -40,31 +36,8 @@ app.use(function(req, res, next) {
 app.use('/users', usersRouter);
 app.use('/trips', tripsRouter);
 app.use('/memories', memoriesRouter);
-
-// aws signedUrl endpoint
-// this gets a temporary url from AWS and sends that url back to the client,
-// which then makes a put request adding the image
-app.get('/awsUrl', function(req, res) {
-	const {filename, filetype} = req.query;
-	// init new s3 instance from aws sdk
-	var s3 = new aws.S3();
-
-	var params = {
-		Bucket: 'traveler-images',
-		Key: filename,
-		Expires: 60,
-		ContentType: filetype
-	};
-
-	s3.getSignedUrl('putObject', params, function(err, data) {
-		if (err) {
-			console.log(err);
-			return err;
-		} else {
-			res.json({signedUrl: data});
-		}
-	});
-});
+app.use('/awsUrl', awsRouter);
+app.use('/login', authRouter);
 
 // 404 catchall
 app.use('*', function(req, res) {

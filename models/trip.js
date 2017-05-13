@@ -88,9 +88,9 @@ const Trip = sequelize.define('Trip',
 	}
 );
 
-// Although we export `Restaurant` here, any code that needs `Restaurant`
+// Although we export `Trip` here, any code that needs `Trip`
 // should import it from `./models/index.js` (so, for instance,
-// `const {Restaurant} = require('./models')`).
+// `const {Trip} = require('./models')`).
 module.exports = {
 	Trip
 };

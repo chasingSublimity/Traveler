@@ -24,7 +24,7 @@ function generateUserData() {
 			firstName: faker.name.firstName(),
 			lastName: faker.name.lastName(),
 			userName: faker.internet.userName(),
-      password: faker.internet.password(),
+			password: faker.internet.password(),
 			createdAt: now,
 			updatedAt: now
 		}, {
@@ -80,14 +80,14 @@ describe('User API', function() {
           res.should.be.json;
           res.body.should.be.a('object');
           res.body.should.include.keys(
-            'id', 'firstName', 'lastName', 'userName', 'password');
+            'id', 'firstName', 'lastName', 'userName');
           // db should have created id on insertion
           res.body.id.should.not.be.null;
           // verify the response sent by db equals the user data we made
           res.body.firstName.should.equal(newUserData.firstName);
           res.body.lastName.should.equal(newUserData.lastName);
           res.body.userName.should.equal(newUserData.userName);
-          res.body.password.should.equal(newUserData.password);
+          res.body.should.not.include.key('password');
 
           // check the user created in db with seed data
           return User.findById(res.body.id);
@@ -96,13 +96,16 @@ describe('User API', function() {
           user.firstName.should.equal(newUserData.firstName);
           user.lastName.should.equal(newUserData.lastName);
           user.userName.should.equal(newUserData.userName);
-          user.password.should.equal(newUserData.password);
+
+          // check hashing function
+          user.password.should.not.equal(newUserData.password);
+          const didPasswordHashCorrectly = user.validatePassword(newUserData.password);
+          didPasswordHashCorrectly.should.equal(true);
         });
     });
   });
 
   describe('PUT endpoint', function() {
-
     // strategy:
     //  1. Get an existing user from db
     //  2. Make a PUT request to update that user

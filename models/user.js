@@ -1,8 +1,6 @@
 'use strict';
 
-// we need the Sequelize library in order to
-// get the different data types for model properties
-// (for instance, `Sequelize.string`).
+const bcrypt = require('bcrypt-nodejs');
 const Sequelize = require('sequelize');
 // we should only have one sequelize instance in our
 // whole app, which we can import here and other model
@@ -36,9 +34,6 @@ const User = sequelize.define('User',
     // this options ensures that if sequelize creates any
     // tables on behalf of this model.
 		underscored: true,
-		getterMethods: {
-      // none right now, but may use getters in the future
-		},
 		classMethods: {
       // relations between models are declared in `.classMethods.associate`, which gets called
       // in `/models/index.js`
@@ -54,9 +49,12 @@ const User = sequelize.define('User',
 						},
 						onDelete: 'CASCADE'
 					});
-			}
+			},
 		},
 		instanceMethods: {
+			validatePassword: function(password) {
+				return bcrypt.compareSync(password, this.password);
+			},
       // we'll use this instance method to create a standard
       // standard representation of this resource in our app.
 			apiRepr: function() {
@@ -64,17 +62,16 @@ const User = sequelize.define('User',
 					id: this.id,
 					firstName: this.firstName,
 					lastName: this.lastName,
-					userName: this.userName,
-					password: this.password
+					userName: this.userName
 				};
 			}
 		}
 	}
 );
 
-// Although we export `Restaurant` here, any code that needs `Restaurant`
+// Although we export `User` here, any code that needs `User`
 // should import it from `./models/index.js` (so, for instance,
-// `const {Restaurant} = require('./models')`).
+// `const {User} = require('./models')`).
 module.exports = {
 	User
 };

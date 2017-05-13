@@ -1,21 +1,52 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt-nodejs');
 
-const {User} = require('../models');
+const {User} = require('../models/index');
+
+// hash password
+function generateHash(password) {
+	return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+}
+
 
 // can create a new user
-router.post('/', (req, res) => {
+// router.post('/', (req, res) => {
   // `.create` creates a new instance and saves it to the db
   // in a single step.
   // http://docs.sequelizejs.com/en/latest/api/model/#createvalues-options-promiseinstance
+	// return User.create({
+	// 	firstName: req.body.firstName,
+	// 	lastName: req.body.lastName,
+	// 	userName: req.body.userName,
+	// 	password: req.body.password
+	// })
+ //  .then(user => res.status(201).json(user.apiRepr()))
+ //  .catch(err => res.status(500).send({message: err.message}));
+// });
+
+router.post('/', (req, res) => {
+	let {userName, password, firstName, lastName} = req.body;
+
+	const hash = generateHash(password);
+
 	return User.create({
-		firstName: req.body.firstName,
-		lastName: req.body.lastName,
-		userName: req.body.userName,
-		password: req.body.password
+		firstName: firstName,
+		lastName: lastName,
+		userName: userName,
+		password: hash
 	})
-  .then(user => res.status(201).json(user.apiRepr()))
-  .catch(err => res.status(500).send({message: err.message}));
+	.then(user => {
+		// send back apirRepr data
+		return res.status(201).json(user.apiRepr());
+	})
+	// error handling
+	.catch(err => {
+		if (err.name === 'AuthenticationError') {
+			return res.status(422).json({message: err.message});
+		}
+		res.status(500).json({message: 'Internal server error'});
+	});
 });
 
 // update a user
