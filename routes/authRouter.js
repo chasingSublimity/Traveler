@@ -1,7 +1,6 @@
 const express = require('express');
 const jsonParser = require('body-parser').json();
 const passport = require('passport');
-const {BasicStrategy} = require('passport-http');
 const LocalStrategy = require('passport-local').Strategy;
 
 const {User} = require('../models');
@@ -54,11 +53,11 @@ router.use(passport.initialize());
 passport.use(localStrategy);
 
 router.post('/',
-	passport.authenticate('local', { 
-		successRedirect: '/trips',
-		failureRedirect: '/',
-		failureFlash: true
-	})
+	passport.authenticate('local', {}),
+	function (req,res) {
+		console.log('logged in');
+		res.send(req.session);
+	}
 );
 
 module.exports = router;
