@@ -9,44 +9,56 @@ const {User} = require('../models');
 const router = express.Router();
 router.use(jsonParser);
 
-const basicStrategy = new BasicStrategy(function(username, password, callback) {
-	let user;
-	User
-		.findOne({
-			where: {
-				'userName': username
-			} 
-		})
-		.then(_user => {
-			user = _user;
-			if (!user) {
-				return callback(null, false, {message: 'Incorrect username'});
-			}
-			return user.validatePassword(password);
-		}).then(isValid => {
-			if (!isValid) {
-				return callback(null, false, {message: 'Incorrect password'});
-			} else {
-				return callback(null, user);
-			}
-		});
+const localStrategy = new LocalStrategy(
+	// manually set username and password fields
+	{
+		usernameField: 'userName',
+		passwordField: 'password'
+	},
+	function(userName, password, done) {
+		// user needs to be accessible to multiple .then() blocks,
+		// so we've defined it in the parent scope
+		let user;
+		User
+			.findOne({
+				where: {
+					'userName': userName
+				}
+			}).then(function(_user) {
+				user = _user;
+				// if no user exists, return "incorrect username"
+				if (!user) {
+					return done(null, false, {message: 'Incorrect username'});
+				}
+				// else, call validatePassword, which returns a boolean
+				return user.validatePassword(password);
+			}).then(function(isValid) {
+				if (!isValid) {
+					return done(null, false, {message: 'Incorrect password'});
+				} else {
+					return done(null, user);
+				}
+			});
+	}
+);
+
+passport.serializeUser(function(user, done) {
+	done(null, user);
 });
 
-passport.use(basicStrategy);
+passport.deserializeUser(function(user, done) {
+	done(null, user);
+});
+
 router.use(passport.initialize());
+passport.use(localStrategy);
 
-
-router.post('/', function(req, res, next) {
-	passport.authenticate('basic', function(err, user, info) {
-		if (err) { return next(err); }
-			// Redirect if it fails
-		if (!user) { return res.redirect('/'); }
-		req.logIn(user, function(err) {
-			if (err) { return next(err); }
-			// Redirect if it succeeds
-			return res.redirect('/trips');
-		});
-	})(req, res, next);
-});
+router.post('/',
+	passport.authenticate('local', { 
+		successRedirect: '/trips',
+		failureRedirect: '/',
+		failureFlash: true
+	})
+);
 
 module.exports = router;

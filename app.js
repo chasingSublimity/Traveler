@@ -6,6 +6,9 @@
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const express = require('express');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const flash = require('connect-flash');
 const passport = require('passport');
 
 const usersRouter = require('./routes/users');
@@ -17,12 +20,23 @@ const authRouter = require('./routes/authRouter');
 const app = express();
 
 // middleware
+
+// I have no idea what this is doing
+app.use(cookieParser('secret'));
+// this either
+app.use(session({
+	cookie: { maxAge: 60000 },
+	saveUninitialized: true,
+	resave: 'true',
+	secret: 'secret'
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
 app.use(morgan('common'));
 app.use(passport.initialize());
+app.use(flash());
 
 
 // allow cross origin requests
