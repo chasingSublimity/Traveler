@@ -5,18 +5,9 @@ const {Trip, Memory, User} = require('../models');
 
 // get trips
 router.get('/', (req, res) => Trip.findAll(
-  // The `include` part will cause each trip's memories,
-  // if any, to be eager loaded. That means that the
-  // related grade data is fetched from the db at the same
-  // time as the trip data. We need both data sources
-  // available for our `.apiRepr` method to work when we call
-  // it on each trip below.
 	{
 		include: [{
 			model: Memory,
-			// since we're setting `tableName` in our model definition for `Memory`,
-			// we need to use `as` here with the same table name, otherwise
-			// Sequelize won't find it.
 			as: 'memories'
 		}]
 	}).then(trips => res.json({
@@ -26,11 +17,10 @@ router.get('/', (req, res) => Trip.findAll(
 
 // can get individual trips by id
 router.get('/:id', (req, res) => Trip.findById(req.params.id, {
-	// see notes on `include` from route for `/`, above
 	include: [{
+		// necessary for eager loading
 		model: Memory,
-	// since we're setting `tableName` in our model definition for `Memory`,
-	// we need to use `as` here with the same table name
+		// tells sequlize to explicitly look for table called 'memories'
 		as: 'memories'
 	}]
 }).then(trip => res.json(trip.apiRepr())));
