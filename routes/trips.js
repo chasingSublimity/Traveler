@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {Trip, Memory} = require('../models');
+const {Trip, Memory, User} = require('../models');
 
 // get trips
 router.get('/', (req, res) => Trip.findAll(
@@ -37,17 +37,26 @@ router.get('/:id', (req, res) => Trip.findById(req.params.id, {
 
 // can create a new trip
 router.post('/', (req, res) => {
-  // `.create` creates a new instance and saves it to the db
-  // in a single step.
-  // http://docs.sequelizejs.com/en/latest/api/model/#createvalues-options-promiseinstance
-	return Trip.create({
-		origin: req.body.origin,
-		destination: req.body.destination,
-		beginDate: req.body.beginDate,
-		endDate: req.body.endDate,
-		userId: req.body.userId
+	// grab userName from req body
+	const {userName} = req.body;
+
+	// find user, grab userId, create trip with userId
+	User
+	.findOne({
+		where: {
+			'userName': userName
+		}
+	}).then(user => {
+		console.log(user.id);
+		return Trip.create({
+			origin: req.body.origin,
+			destination: req.body.destination,
+			beginDate: req.body.beginDate,
+			endDate: req.body.endDate,
+			userId: user.id
+		});
 	})
-  .then(trip => res.status(201).json(trip.apiRepr()))
+	.then(trip => res.status(201).json(trip.apiRepr()))
   .catch(err => res.status(500).send({message: err.message}));
 });
 
