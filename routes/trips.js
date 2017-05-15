@@ -47,7 +47,6 @@ router.post('/', (req, res) => {
 			'userName': userName
 		}
 	}).then(user => {
-		console.log(user.id);
 		return Trip.create({
 			origin: req.body.origin,
 			destination: req.body.destination,

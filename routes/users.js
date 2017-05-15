@@ -9,27 +9,10 @@ function generateHash(password) {
 	return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 }
 
-
-// can create a new user
-// router.post('/', (req, res) => {
-  // `.create` creates a new instance and saves it to the db
-  // in a single step.
-  // http://docs.sequelizejs.com/en/latest/api/model/#createvalues-options-promiseinstance
-	// return User.create({
-	// 	firstName: req.body.firstName,
-	// 	lastName: req.body.lastName,
-	// 	userName: req.body.userName,
-	// 	password: req.body.password
-	// })
- //  .then(user => res.status(201).json(user.apiRepr()))
- //  .catch(err => res.status(500).send({message: err.message}));
-// });
-
 router.post('/', (req, res) => {
 	let {userName, password, firstName, lastName} = req.body;
 
 	const hash = generateHash(password);
-
 	return User.create({
 		firstName: firstName,
 		lastName: lastName,

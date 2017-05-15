@@ -69,7 +69,7 @@ describe('Trip API', function() {
     console.log('seeding user data...');
     // seedUserData is imported from users-endpoint tests
     seedUserData(1);
-    // grab a trip_id from the DB and assign it to the tripId in the 
+    // grab a user_id from the DB and assign it to the userId in the 
     // parent scope
     return User
       .findOne()
@@ -167,7 +167,8 @@ describe('Trip API', function() {
   });
 
   describe('POST endpoint', function() {
-    // strategy: make a POST request with data,
+    // strategy: grab userid from existing user,
+    // make a POST request with data,
     // then prove that the trip we get back has
     // right keys, and that `id` is there (which means
     // the data was inserted into db)
@@ -178,14 +179,16 @@ describe('Trip API', function() {
         destination: generateDestinationName(),
 				beginDate: moment().set({'year': 2013, 'month': 3, 'day': 10, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0}),
 				endDate: moment().set({'year': 2013, 'month': 3, 'day': 15, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0}),
-				userId: userId,
+				userName: '',
         createdAt: now,
         updatedAt: now
       };
 
-      return chai.request(app).post('/trips').send(newTripData)
-        .then(function(res) {
-
+      return User.findOne()
+        .then(user => {
+          newTripData.userName = user.userName;
+          return chai.request(app).post('/trips').send(newTripData);
+        }).then(res => {
           res.should.have.status(201);
           res.should.be.json;
           res.body.should.be.a('object');
