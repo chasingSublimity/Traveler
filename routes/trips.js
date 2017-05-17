@@ -5,7 +5,6 @@ const {Trip, Memory, User} = require('../models');
 
 // get trips by grabbing the id from the user and then finding trips belonging to that id
 router.get('/', (req, res) => {
-	console.log('query: ', req.query);
 	User.find({
 		where: {userName: req.query.userName}
 	}).then(user => {Trip.findAll(
