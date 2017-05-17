@@ -22,7 +22,7 @@ const app = express();
 // middleware
 
 // I have no idea what this is doing
-app.use(cookieParser('secret'));
+app.use(cookieParser());
 // this either
 app.use(session({
 	cookie: { maxAge: 60000 },
