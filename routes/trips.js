@@ -31,6 +31,7 @@ router.get('/:id', (req, res) => Trip.findById(req.params.id, {
 		as: 'memories'
 	}]
 }).then(trip => {
+	// send back json containing trip data and trip memories
 	res.json({
 		tripData:trip.apiRepr(),
 		memories: trip.memories
