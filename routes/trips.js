@@ -7,7 +7,7 @@ const {Trip, Memory, User} = require('../models');
 router.get('/', (req, res) => {
 	User.find({
 		where: {userName: req.query.userName}
-	}).then(user => {Trip.findAll(
+	}).then(user => { Trip.findAll(
 		{
 			where: {
 				userId: user.id
@@ -30,7 +30,12 @@ router.get('/:id', (req, res) => Trip.findById(req.params.id, {
 		// tells sequlize to explicitly look for table called 'memories'
 		as: 'memories'
 	}]
-}).then(trip => res.json(trip.apiRepr())));
+}).then(trip => {
+	res.json({
+		tripData:trip.apiRepr(),
+		memories: trip.memories
+	});
+}));
 
 // can create a new trip
 router.post('/', (req, res) => {
