@@ -16,11 +16,10 @@ router.post('/', (req, res) => {
 	geocodeLocationData(req.body.location)
 		.then(locationData => {
 			// create memory data with stringified locationData
-			console.log(req.body.imgUrl);
 			return Memory.create({
 				tripId: req.body.tripId,
 				imgUrl: req.body.imgUrl,
-				location: JSON.stringify(locationData),
+				location: locationData,
 				comments: req.body.comments,
 				date: req.body.date
 			});

@@ -9,14 +9,13 @@ const options = {
 
 const geocoder = NodeGeocoder(options);
 
-// use geocoder library to convert location string into data
+// use geocoder library to convert location string into stringified coordinates
 function geocodeLocationData(locationString) {
 	return geocoder.geocode(locationString)
 		.then(res => {
 			const geoData = res[0];
 			const locationCoordinates = [geoData.latitude, geoData.longitude];
-			// console.log(locationCoordinates);
-			return locationCoordinates;
+			return JSON.stringify(locationCoordinates);
 		})
 		.catch(err => {
 			console.log(err);
