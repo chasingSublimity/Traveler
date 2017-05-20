@@ -14,7 +14,8 @@ chai.use(chaiHttp);
 // used for seed data
 function generateLocation() {
 	const origins = [
-		'Lubbock', 'Fort Worth', 'Houston', 'Bronx', 'Staten Island'];
+		'[32.7554883, -97.3307658]', '[29.7604267, -95.3698028]', 
+		'[42.62890489999999, -78.7376522]', '[40.5795317, -74.1502007]'];
 	return origins[Math.floor(Math.random() * origins.length)];
 }
 
@@ -153,7 +154,7 @@ describe('Memory API', function() {
 		// test for failing cases
 
 
-		it ('should add a new memory', function() {
+		it('should add a new memory', function() {
 		// Strategy: make a POST request with data
 		// the prove that the response data matches the seed data and
 		// that the 'id' is present, which means that the data was inserted 
@@ -161,7 +162,7 @@ describe('Memory API', function() {
 		// Next, we query the db and ensure that the data in the db matches the seed data.
 			const newMemoryData = {
 				imgUrl: 'http://placekitten.com/200/300',
-				location: generateLocation(),
+				location: 'Lubbock, TX',
 				comments: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
 									sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
 				date: moment().set({'year': 2013, 'month': 3, 'day': 10, 'hour':0, 'minute':0, 'second':0, 'millisecond': 0}),
@@ -176,7 +177,8 @@ describe('Memory API', function() {
 						'id', 'imgUrl', 'location', 'comments', 'date', 'tripId'
 						);
 					res.body.imgUrl.should.equal(newMemoryData.imgUrl);
-					res.body.location.should.equal(newMemoryData.location);
+					// hardcoding here because I don't want to deal with promises in my tests.
+					res.body.location.should.equal('[33.5778631,-101.8551665]');
 					res.body.comments.should.equal(newMemoryData.comments);
 					moment.utc(res.body.date).format().should.equal(moment.utc(newMemoryData.date).format());
 					res.body.tripId.should.equal(newMemoryData.tripId);
@@ -187,7 +189,8 @@ describe('Memory API', function() {
 				})
 				.then(memory => {
 					memory.imgUrl.should.equal(newMemoryData.imgUrl);
-					memory.location.should.equal(newMemoryData.location);
+					// hardcoding here because I don't want to deal with promises in my tests.
+					memory.location.should.equal('[33.5778631,-101.8551665]');
 					memory.comments.should.equal(newMemoryData.comments);
 					moment(memory.date).format().should.equal(moment(newMemoryData.date).format());
 					memory.tripId.should.equal(newMemoryData.tripId);
@@ -224,8 +227,6 @@ describe('Memory API', function() {
 					memory.location.should.equal(updateData.location);
 					memory.comments.should.equal(updateData.comments);
 					// moment is used here to homogenize date formats
-					console.log(memory.date);
-					console.log(updateData.date);
 					moment.utc(memory.date).format().should.equal(moment.utc(updateData.date).format());
 				});
 		});
