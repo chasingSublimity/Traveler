@@ -143,7 +143,7 @@ describe('Trip API', function() {
 				})
         .then(res => {
           res.should.have.status(200);
-          res.body.id.should.equal(trip.id);
+          res.body.tripData.id.should.equal(trip.id);
         });
     });
 
@@ -151,7 +151,7 @@ describe('Trip API', function() {
       // Strategy: Get back all trips, and ensure they have expected keys
 
       return chai.request(app)
-        .get('/trips')
+        .get(`/trips?userName=${seedUserName}`)
         .then(function(res) {
           res.should.have.status(200);
           res.should.be.json;

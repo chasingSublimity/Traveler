@@ -65,7 +65,6 @@ router.post('/', (req, res) => {
 
 // update a trip
 router.put('/:id', (req, res) => {
-
   // if the user sent over any of the updatableFields, we update those values
   // in document
 	const toUpdate = {};
