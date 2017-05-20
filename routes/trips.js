@@ -7,7 +7,8 @@ const {Trip, Memory, User} = require('../models');
 router.get('/', (req, res) => {
 	User.find({
 		where: {userName: req.query.userName}
-	}).then(user => { Trip.findAll(
+	}).then(user => { 
+		Trip.findAll(
 		{
 			where: {
 				userId: user.id

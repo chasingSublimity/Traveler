@@ -61,9 +61,10 @@ function generateTripData(userId) {
 
 describe('Trip API', function() {
 
-  // this needs to be accessed by different tests, so we define it
+  // these need to be accessed by different tests, so we define it
   // in the parent scope of the trip-endpoint tests
   let userId;
+  let seedUserName;
 
   before(function() {
     console.log('seeding user data...');
@@ -75,6 +76,7 @@ describe('Trip API', function() {
       .findOne()
       .then(user => {
         userId = user.id;
+        seedUserName = user.userName;
       });
   });
 
@@ -112,9 +114,8 @@ describe('Trip API', function() {
       // need to have access to mutate and access `res` across
       // `.then()` calls below, so declare it here so can modify in place
 			let res;
-
 			return chai.request(app)
-        .get('/trips')
+        .get(`/trips?userName=${seedUserName}`)
         .then(function(_res) {
           // so subsequent .then blocks can access resp obj.
 				res = _res;
