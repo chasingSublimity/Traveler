@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const {Trip, Memory} = require('../models');
+const geocodeLocationData = require('../geocoder');
 
 // can get individual memories by id
 router.get('/:id', (req, res) => Memory.findById(req.params.id)
@@ -11,15 +12,31 @@ router.get('/:id', (req, res) => Memory.findById(req.params.id)
 
 // can create a new Memory
 router.post('/', (req, res) => {
-	return Memory.create({
-		tripId: req.body.tripId,
-		imgUrl: req.body.imgUrl,
-		location: req.body.location,
-		comments: req.body.comments,
-		date: req.body.date,
-	})
-  .then(memory => res.status(201).json(memory.apiRepr()))
-  .catch(err => res.status(500).send({message: err.message}));
+	// helper function converts location string to coordinates
+	geocodeLocationData(req.body.location)
+		.then(locationData => {
+			// create memory data with stringified locationData
+			console.log(req.body.imgUrl);
+			return Memory.create({
+				tripId: req.body.tripId,
+				imgUrl: req.body.imgUrl,
+				location: JSON.stringify(locationData),
+				comments: req.body.comments,
+				date: req.body.date
+			});
+		})
+		.then(memory => res.status(201).json(memory.apiRepr()))
+		.catch(err => res.status(500).json({message: err.message}));
+
+	// return Memory.create({
+	// 	tripId: req.body.tripId,
+	// 	imgUrl: req.body.imgUrl,
+	// 	location: req.body.location,
+	// 	comments: req.body.comments,
+	// 	date: req.body.date,
+	// })
+ //  .then(memory => res.status(201).json(memory.apiRepr()))
+ //  .catch(err => res.status(500).send({message: err.message}));
 });
 
 
