@@ -26,16 +26,6 @@ router.post('/', (req, res) => {
 		})
 		.then(memory => res.status(201).json(memory.apiRepr()))
 		.catch(err => res.status(500).json({message: err.message}));
-
-	// return Memory.create({
-	// 	tripId: req.body.tripId,
-	// 	imgUrl: req.body.imgUrl,
-	// 	location: req.body.location,
-	// 	comments: req.body.comments,
-	// 	date: req.body.date,
-	// })
- //  .then(memory => res.status(201).json(memory.apiRepr()))
- //  .catch(err => res.status(500).send({message: err.message}));
 });
 
 
